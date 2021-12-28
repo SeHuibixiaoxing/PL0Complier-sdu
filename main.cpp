@@ -7,7 +7,8 @@ int main(int argc, char *argv[])
 {
 
   DebugManager debugManager;
-  debugManager.debugLexicalAnalyzer();
+  //debugManager.debugLexicalAnalyzer();
+  debugManager.debugParser();
 
 
     QApplication a(argc, argv);

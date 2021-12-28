@@ -65,7 +65,7 @@ typedef int int32;
 #define SYM_undefine 53
 
 
-enum class WordType
+enum class TokenType
 {
     //Delimiter
     COMMASYM =  SYM_comma,

@@ -1,37 +1,37 @@
 #include "lexicalanalyzer.h"
 
-LexicalAnalyzer::LexicalAnalyzer()
+Lexer::Lexer()
 {
 
 }
 
-void LexicalAnalyzer::sendErrorInformation(ErrorInformation* _errorInformation)
+void Lexer::sendErrorInformation(ErrorInformation* _errorInformation)
 {
   this->errorInformation = _errorInformation;
 }
 
-void LexicalAnalyzer::sendCode(const QString& _code)
+void Lexer::sendCode(const QString& _code)
 {
   this->code = _code;
 }
 
-void LexicalAnalyzer::debugPrintWordList()
+void Lexer::debugPrintTokenList()
 {
-  for(auto word : *(this->wordList))
+  for(auto word : *(this->tokenList))
   {
     word.debugPrint();
     qDebug() << "\n";
   }
 }
 
-void LexicalAnalyzer::sendWordList(WordList *_wordList)
+void Lexer::sendWordList(TokenList *_tokenList)
 {
-  this->wordList = _wordList;
+  this->tokenList = _tokenList;
 }
 
-std::tuple<int32, Word> LexicalAnalyzer::analysisWord(int beginRank, uint64 line) const
+std::tuple<int32, Token> Lexer::analysisWord(int beginRank, uint64 line) const
 {
-  Word word;
+  Token token;
   QString string;
   int endRank = beginRank;
 
@@ -53,15 +53,15 @@ std::tuple<int32, Word> LexicalAnalyzer::analysisWord(int beginRank, uint64 line
     if(beginRank + 9 < endRank)
     {
       this->errorInformation->addLexicalAnalyzerErrorNumberTooLong(line);
-      word.set(line, string, (WordType)SYM_undefine);
+      token.set(line, string, (TokenType)SYM_undefine);
     }
     else
     {
       //截取数字转换为int存入wordlist
       string = code.mid(beginRank, endRank - beginRank + 1);
-      word.set(line, string, (WordType)SYM_number, string.toInt());
+      token.set(line, string, (TokenType)SYM_number, string.toInt());
     }
-    return std::make_tuple(endRank, word);
+    return std::make_tuple(endRank, token);
   }
 
   //是否为阶符
@@ -74,7 +74,7 @@ std::tuple<int32, Word> LexicalAnalyzer::analysisWord(int beginRank, uint64 line
     }
     if(code.mid(beginRank, keyWord[i].size()) == keyWord[i])
     {
-      return std::make_tuple(beginRank + keyWord[i].size() - 1, Word(line, keyWord[i], (WordType)i));
+      return std::make_tuple(beginRank + keyWord[i].size() - 1, Token(line, keyWord[i], (TokenType)i));
     }
   }
 
@@ -88,7 +88,14 @@ std::tuple<int32, Word> LexicalAnalyzer::analysisWord(int beginRank, uint64 line
     }
     if(code.mid(beginRank, keyWord[i].size()) == keyWord[i])
     {
-      return std::make_tuple(beginRank + keyWord[i].size() - 1, Word(line, keyWord[i], (WordType)i));
+      if(beginRank + keyWord[i].size() < code.size() && (keyWord[i] == ":" || keyWord[i] == "<" || keyWord[i] == ">"))
+      {
+        if(code[beginRank + keyWord->size()] == '=')
+        {
+          continue;
+        }
+      }
+      return std::make_tuple(beginRank + keyWord[i].size() - 1, Token(line, keyWord[i], (TokenType)i));
     }
   }
 
@@ -106,7 +113,7 @@ std::tuple<int32, Word> LexicalAnalyzer::analysisWord(int beginRank, uint64 line
       if(beginRank + keyWord[i].size() + 1 > code.size() ||
           (!code[beginRank + keyWord[i].size()].isLetterOrNumber()))
       {
-        return std::make_tuple(beginRank + keyWord[i].size() - 1, Word(line, keyWord[i], (WordType)i));
+        return std::make_tuple(beginRank + keyWord[i].size() - 1, Token(line, keyWord[i], (TokenType)i));
       }
     }
   }
@@ -116,7 +123,7 @@ std::tuple<int32, Word> LexicalAnalyzer::analysisWord(int beginRank, uint64 line
   {
     //如果开始字符不是数字或字母，不是合法标识符，报错
     this->errorInformation->addLexicalAnalyzerErrorIdentifierBegin(line);
-    return std::make_tuple(beginRank + 1, Word(line, code[beginRank], (WordType)SYM_undefine));
+    return std::make_tuple(beginRank + 1, Token(line, code[beginRank], (TokenType)SYM_undefine));
   }
 
   for(;endRank < code.size();++ endRank)
@@ -127,11 +134,11 @@ std::tuple<int32, Word> LexicalAnalyzer::analysisWord(int beginRank, uint64 line
       break;
     }
   }
-  return std::make_tuple(endRank, Word(line, code.mid(beginRank, endRank - beginRank + 1), (WordType)SYM_ident, code.mid(beginRank, endRank - beginRank + 1)));
+  return std::make_tuple(endRank, Token(line, code.mid(beginRank, endRank - beginRank + 1), (TokenType)SYM_ident, code.mid(beginRank, endRank - beginRank + 1)));
 
 }
 
-bool LexicalAnalyzer::analyse()
+bool Lexer::analyse()
 {
     if(this->hasAnalyze) return false;
 
@@ -157,7 +164,7 @@ bool LexicalAnalyzer::analyse()
       else if(nowChar != ' ' && nowChar != '\r' && nowChar != '\t')
       {
         auto [newRank, tmpWord] = this->analysisWord(nowRank, line);
-        this->wordList->push_back(tmpWord);
+        this->tokenList->push_back(tmpWord);
         nowRank = newRank;
       }
     }
@@ -166,7 +173,7 @@ bool LexicalAnalyzer::analyse()
     return true;
 }
 
-void LexicalAnalyzer::send(WordList *_wordlist, ErrorInformation *_errorInformation, const QString &_code)
+void Lexer::send(TokenList *_wordlist, ErrorInformation *_errorInformation, const QString &_code)
 {
   clear();
   this->sendCode(_code);
@@ -177,16 +184,16 @@ void LexicalAnalyzer::send(WordList *_wordlist, ErrorInformation *_errorInformat
   return;
 }
 
-bool LexicalAnalyzer::hasFinish()
+bool Lexer::hasFinish()
 {
   return this->hasAnalyze;
 }
 
-void LexicalAnalyzer::clear()
+void Lexer::clear()
 {
     this->hasAnalyze = false;
     this->code.clear();
-    this->wordList = nullptr;
+    this->tokenList = nullptr;
     this->errorInformation = nullptr;
 }
 

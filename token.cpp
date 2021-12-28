@@ -1,28 +1,28 @@
-#include "word.h"
+#include "token.h"
 
-Word::Word()
+Token::Token()
 {
   this->string = "";
-  this->type = (WordType)SYM_undefine;
+  this->type = (TokenType)SYM_undefine;
   this->id = "";
   this->num = 0;
   this->line = 0;
 }
 
-Word::Word(uint64 _line, const QString& _string, WordType _type)
+Token::Token(uint64 _line, const QString& _string, TokenType _type)
 {
   set(_line,_string, _type);
 }
-Word::Word(uint64 _line, const QString& _string, WordType _type, const QString& _id)
+Token::Token(uint64 _line, const QString& _string, TokenType _type, const QString& _id)
 {
   set(_line,_string, _type, _id);
 }
-Word::Word(uint64 _line, const QString& _string, WordType _type, int64 _num)
+Token::Token(uint64 _line, const QString& _string, TokenType _type, int64 _num)
 {
   set(_line,_string, _type, _num);
 }
 
-void Word::set(uint64 _line, const QString& _string, WordType _type)
+void Token::set(uint64 _line, const QString& _string, TokenType _type)
 {
   this->line = _line;
   this->string = _string;
@@ -30,7 +30,7 @@ void Word::set(uint64 _line, const QString& _string, WordType _type)
   this->id = "";
   this->num = 0;
 }
-void Word::set(uint64 _line, const QString& _string, WordType _type, const QString &_id)
+void Token::set(uint64 _line, const QString& _string, TokenType _type, const QString &_id)
 {
   this->line = _line;
   this->string = _string;
@@ -38,7 +38,7 @@ void Word::set(uint64 _line, const QString& _string, WordType _type, const QStri
   this->id = _id;
   this->num = 0;
 }
-void Word::set(uint64 _line, const QString& _string, WordType _type, int64 _num)
+void Token::set(uint64 _line, const QString& _string, TokenType _type, int64 _num)
 {
   this->line = _line;
   this->string = _string;
@@ -47,62 +47,62 @@ void Word::set(uint64 _line, const QString& _string, WordType _type, int64 _num)
   this->num = _num;
 }
 
-bool Word::isDelimiter() const
+bool Token::isDelimiter() const
 {
   return (int)this->type >= SYM_min_delimiter && (int)this->type <= SYM_max_delimiter;
 }
 
-bool Word::isOperator() const
+bool Token::isOperator() const
 {
   return (int)this->type >= SYM_min_operator && (int)this->type <= SYM_max_operator;
 }
 
-bool Word::isKeyWord() const
+bool Token::isKeyWord() const
 {
   return (int)this->type >= SYM_min_keyword && (int)this->type <= SYM_max_keyword;
 }
 
-bool Word::isIdent() const
+bool Token::isIdent() const
 {
   return (int)this->type == SYM_ident;
 }
 
-bool Word::isNumber() const
+bool Token::isNumber() const
 {
   return (int)this->type == SYM_number;
 }
 
-bool Word::isUndefine() const
+bool Token::isUndefine() const
 {
   return (int)this->type == SYM_undefine;
 }
 
-WordType Word::getType()
+TokenType Token::getType() const
 {
   return this->type;
 }
 
-int64 Word::getNum()
+int64 Token::getNum() const
 {
   return this->num;
 }
 
-uint64 Word::getLine()
+uint64 Token::getLine() const
 {
   return this->line;
 }
 
-QString Word::getId()
+QString Token::getId() const
 {
   return this->id;
 }
 
-QString Word::getString()
+QString Token::getString() const
 {
   return this->string;
 }
 
-void Word::debugPrint() const
+void Token::debugPrint() const
 {
   if(this->isDelimiter() || this->isOperator() || this->isKeyWord() || this->isUndefine())
   {

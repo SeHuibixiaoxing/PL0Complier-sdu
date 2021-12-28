@@ -16,17 +16,22 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
+        mainwindow.cpp mainwindow.h
         mainwindow.ui
-        manager.cpp
-        manager.h
-        lexicalanalyzer.h
-        lexicalanalyzer.cpp
+        manager.cpp manager.h
+        lexicalanalyzer.h lexicalanalyzer.cpp
         defs.h defs.cpp
-        word.h word.cpp
+        token.h token.cpp
         errorinformation.h errorinformation.cpp
         debugmanager.h debugmanager.cpp
+        production.h production.cpp
+        productionchar.h productionchar.cpp
+        parser.h parser.cpp
+        symboltable.h symboltable.cpp
+        symboltableitem.h symboltableitem.cpp
+        symboltablemanage.h symboltablemanage.cpp
+        instruction.h instruction.cpp
+        virtualmachine.h virtualmachine.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

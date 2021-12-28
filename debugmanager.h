@@ -10,6 +10,7 @@ public:
   DebugManager();
 
   void debugLexicalAnalyzer();
+  void debugParser();
 private:
   Manager manager;
 };

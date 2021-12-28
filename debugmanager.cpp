@@ -9,3 +9,8 @@ void DebugManager::debugLexicalAnalyzer()
 {
   this->manager.debugLexicalAnalyzer();
 }
+
+void DebugManager::debugParser()
+{
+  this->manager.debugParser();
+}
