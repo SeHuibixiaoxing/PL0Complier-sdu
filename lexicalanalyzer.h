@@ -27,9 +27,9 @@ private:
 
     ErrorInformation* errorInformation;     //存储错误信息
 
-    std::tuple<int32, Token> analysisWord(int beginRank, uint64 line) const;  //从beginRank开始(非空格、换行)，识别一个单词，返回终止下标和识别到的单词
+    std::tuple<int32, Token> analysisToken(int beginRank, uint64 line) const;  //从beginRank开始(非空格、换行)，识别一个单词，返回终止下标和识别到的单词
 
-    void sendWordList(TokenList *_tokenList);
+    void sendTokenList(TokenList *_tokenList);
     void sendErrorInformation(ErrorInformation* _errorInformation);
     void sendCode(const QString& _code);     //输入代码
 

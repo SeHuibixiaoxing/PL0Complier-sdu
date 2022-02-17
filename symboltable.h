@@ -15,7 +15,7 @@ public:
   int searchAddress(const QString& name, int instructionNumber);
   int searchSize(const QString& name, int instructionNumber);
 
-  int refillAddres(const QString& name, int address);
+  int refillAddress(const QString& name, int address);
   int refillSize(const QString& name, int size);
 
 

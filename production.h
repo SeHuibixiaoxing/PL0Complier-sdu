@@ -10,7 +10,6 @@
 class Production
 {
 public:
-
   Production(const ProductionChar& _left, const ProductionCharList& _right, const std::function<void(ProductionChar &left, std::vector<ProductionChar>&)>& _func);
   Production();
 

@@ -106,33 +106,18 @@ void Token::debugPrint() const
 {
   if(this->isDelimiter() || this->isOperator() || this->isKeyWord() || this->isUndefine())
   {
-    qDebug() << "[" << this->string;
-    qDebug() << ", " << "line: " << this->line;
-    qDebug() << ", " << "type: " << keyWord[(int)this->type];
-    qDebug() << "]";
+    qDebug() << "[" << this->string << ", " << "line: " << this->line << ", " << "type: " << keyWord[(int)this->type] << "]";
   }
   else if(this->isNumber())
   {
-    qDebug() << "[" << this->string;
-    qDebug() << ", " << "line: " << this->line;
-    qDebug() << ", " << "type: " << keyWord[(int)this->type];
-    qDebug() << ", " << "value: " << this->num;
-    qDebug() << "]";
+    qDebug() << "[" << this->string << ", " << "line: " << this->line << ", " << "type: " << keyWord[(int)this->type] << ", " << "value: " << this->num << "]";
   }
   else if(this->isIdent())
   {
-    qDebug() << "[" << this->string;
-    qDebug() << ", " << "line: " << this->line;
-    qDebug() << ", " << "type: " << keyWord[(int)this->type];
-    qDebug() << ", " << "id: " << this->id;
-    qDebug() << "]";
+    qDebug() << "[" << this->string << ", " << "line: " << this->line << ", " << "type: " << keyWord[(int)this->type] << ", " << "id: " << this->id << "]";
   }
   else
   {
-    qDebug() << "Error: cant identify the type of this word.";
-    qDebug() << "[" << this->string;
-    qDebug() << ", " << "line: " << this->line;
-    qDebug() << ", " << "type: " << keyWord[(int)this->type];
-    qDebug() << "]";
+    qDebug() << "Error: cant identify the type of this word." << "[" << this->string << ", " << "line: " << this->line << ", " << "type: " << keyWord[(int)this->type] << "]";
   }
 }

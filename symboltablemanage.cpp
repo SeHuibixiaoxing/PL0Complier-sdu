@@ -83,7 +83,7 @@ int SymbolTableManage::refillAddres(const QString &name, int address)
   for(auto tablePoint = this->symbolTableList.rbegin();tablePoint != this->symbolTableList.rend();++ tablePoint)
   {
     auto& table = *tablePoint;
-    re = table.refillAddres(name, address);
+    re = table.refillAddress(name, address);
     if(re != -1)
       return re;
   }

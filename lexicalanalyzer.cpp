@@ -20,16 +20,15 @@ void Lexer::debugPrintTokenList()
   for(auto word : *(this->tokenList))
   {
     word.debugPrint();
-    qDebug() << "\n";
   }
 }
 
-void Lexer::sendWordList(TokenList *_tokenList)
+void Lexer::sendTokenList(TokenList *_tokenList)
 {
   this->tokenList = _tokenList;
 }
 
-std::tuple<int32, Token> Lexer::analysisWord(int beginRank, uint64 line) const
+std::tuple<int32, Token> Lexer::analysisToken(int beginRank, uint64 line) const
 {
   Token token;
   QString string;
@@ -140,37 +139,37 @@ std::tuple<int32, Token> Lexer::analysisWord(int beginRank, uint64 line) const
 
 bool Lexer::analyse()
 {
-    if(this->hasAnalyze) return false;
+  if(this->hasAnalyze) return false;
 
-    int line = 1;
+  int line = 1;
 
-    //去除前置空格回车
-    for(auto c = code.begin();c != code.end();++ c)
+  //去除前置空格回车
+  for(auto c = code.begin();c != code.end();++ c)
+  {
+    if(*c == '\n') ++ line;
+    if(*c == ' ' || *c == '\n' || *c == '\r' || *c == '\t')
     {
-      if(*c == '\n') ++ line;
-      if(*c == ' ' || *c == '\n' || *c == '\r' || *c == '\t')
-      {
-        c = code.erase(c, c+1);
-      }
-      else break;
+      c = code.erase(c, c+1);
     }
+    else break;
+  }
 
-    int nowRank = 0;
-    QChar& nowChar = code[nowRank];
-    for(;nowRank < code.size();++ nowRank)
+  int nowRank = 0;
+  QChar& nowChar = code[nowRank];
+  for(;nowRank < code.size();++ nowRank)
+  {
+    nowChar = code[nowRank];
+    if(nowChar == '\n') ++ line;
+    else if(nowChar != ' ' && nowChar != '\r' && nowChar != '\t')
     {
-      nowChar = code[nowRank];
-      if(nowChar == '\n') ++ line;
-      else if(nowChar != ' ' && nowChar != '\r' && nowChar != '\t')
-      {
-        auto [newRank, tmpWord] = this->analysisWord(nowRank, line);
-        this->tokenList->push_back(tmpWord);
-        nowRank = newRank;
-      }
+      auto [newRank, tmpWord] = this->analysisToken(nowRank, line);
+      this->tokenList->push_back(tmpWord);
+      nowRank = newRank;
     }
+  }
 
-    this->hasAnalyze = true;
-    return true;
+  this->hasAnalyze = true;
+  return true;
 }
 
 void Lexer::send(TokenList *_wordlist, ErrorInformation *_errorInformation, const QString &_code)
@@ -179,7 +178,7 @@ void Lexer::send(TokenList *_wordlist, ErrorInformation *_errorInformation, cons
   this->sendCode(_code);
   this->sendErrorInformation(_errorInformation);
   _errorInformation->clear();
-  this->sendWordList(_wordlist);
+  this->sendTokenList(_wordlist);
 
   return;
 }

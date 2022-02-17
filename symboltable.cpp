@@ -87,7 +87,7 @@ int SymbolTable::searchSize(const QString &name, int instructionNumber)
   return -1;
 }
 
-int SymbolTable::refillAddres(const QString &name, int address)
+int SymbolTable::refillAddress(const QString &name, int address)
 {
   for(auto& i : this->itemList)
   {
